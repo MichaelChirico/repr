@@ -274,7 +274,8 @@ repr_latex.matrix <- function(
 	cols = getOption('repr.matrix.max.cols'),
 	colspec = getOption('repr.matrix.latex.colspec')
 ) {
-	cols_spec <- paste0(paste(rep(colspec$col, min(cols + 1L, ncol(obj))), collapse = ''), colspec$end)
+	# NB: use numeric() not to overflow when cols=.Machine$integer.max, #170
+	cols_spec <- paste0(paste(rep(colspec$col, min(as.numeric(cols) + 1, ncol(obj))), collapse = ''), colspec$end)
 	if (has_row_names(obj)) {
 		row_head <- colspec$row_head
 		if (is.null(row_head)) row_head <- colspec$row.head  # backwards compat
