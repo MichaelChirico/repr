@@ -204,3 +204,17 @@ test_that('data.frame with list columns can be displayed', {
 		expect_identical(repr_html(data.table::as.data.table(df)), sub('data\\.frame','data.table',expected))
 	}
 })
+
+test_that("partially-empty matrices requiring elision can be displayed", {
+  withr::local_options(list(
+    repr.matrix.max.rows = 8L,
+    repr.matrix.max.cols = 8L
+  ))
+  m <- matrix(nrow = 0L, ncol = 10L)
+  expect_silent(repr(m))
+  expect_silent(repr(t(m))
+
+  colnames(m) <- sprintf("A%02d", 1:10)
+  expect_match(repr(m), "A04[^A]*A07")
+  expect_match(repr(t(m)), "A04[^A]*A07")
+})
