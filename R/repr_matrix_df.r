@@ -40,6 +40,9 @@ arr_partition <- function(a, rows, cols) {
 	part_r <- partition(nrow(a), rows)
 	part_c <- partition(ncol(a), cols)
 	
+	if (is.null(rownames(a))) rownames(a) <- seq_len(nrow(a))
+	if (is.null(colnames(a))) colnames(a) <- seq_len(ncol(a))
+
 	# assign a list of parts that can be coerced to strings
 	if (!is.null(part_r) && !is.null(part_c)) {
 		structure(list(
