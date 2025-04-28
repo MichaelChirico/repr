@@ -116,8 +116,8 @@ arr_part_format <- function(part) {
 arr_parts_combine <- function(parts, rownms, colnms) {
 	omit <- attr(parts, 'omit')
 	mat <- switch(omit,
-		rows = rbind(parts$upper, chars$ellip_v, parts$lower, deparse.level = 0L),
-		cols = cbind(parts$left,  chars$ellip_h, parts$right, deparse.level = 0L),
+		rows = rbind(parts$upper, if (nrow(parts$upper)) chars$ellip_v, parts$lower, deparse.level = 0L),
+		cols = cbind(parts$left,  if (ncol(parts$left)) chars$ellip_h, parts$right, deparse.level = 0L),
 		none = parts$full,
 		both = rbind(
 			cbind(parts$ul, chars$ellip_h, parts$ur, deparse.level = 0L),
