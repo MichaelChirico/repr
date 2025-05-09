@@ -226,3 +226,12 @@ test_that('forced-narrow inputs work', {
 </table>
 ")
 })
+
+test_that('data.table and data.frame elision is the same', {
+	skip_if_not_installed('data.table')
+	withr::local_options(list(repr.matrix.max.rows = 10L, repr.matrix.max.cols = 10L))
+	DF <- data.frame(matrix(rnorm(100L*100L), 100L, 100L))
+	expect_identical(repr_text(DF), repr_text(data.table::as.data.table(DF)))
+	expect_identical(repr_text(DF[1:10, ]), repr_text(data.table::as.data.table(DF[1:10, ])))
+	expect_identical(repr_text(DF[1:10, 1:10]), repr_text(data.table::as.data.table(DF[1:10, 1:10])))
+})

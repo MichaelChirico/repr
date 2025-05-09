@@ -33,14 +33,14 @@ onload_chars <- function() {
 	chars$times_s <- .char_fallback('\u00D7', 'x')
 }
 
-arr_partition <- function(a, rows, cols) {
-	stopifnot(rows >= 2L, cols >= 2L)
-	
-	# create sequences of indices to bisect rows and columns
-	part_r <- partition(nrow(a), rows)
-	part_c <- partition(ncol(a), cols)
-	
-	# assign a list of parts that can be coerced to strings
+#' Assign a list of parts that can be coerced to strings
+#' @noRd
+partition_from_parts <- function(a, part_r, part_c) {
+	UseMethod("partition_from_parts")
+}
+
+#' @export
+partition_from_parts.default <- function(a, part_r, part_c) {
 	if (!is.null(part_r) && !is.null(part_c)) {
 		structure(list(
 			ul = a[part_r$start, part_c$start, drop = FALSE],
@@ -61,6 +61,40 @@ arr_partition <- function(a, rows, cols) {
 	} else {
 		structure(list(full = a), omit = 'none')
 	}
+}
+
+#' @export
+partition_from_parts.data.table <- function(a, part_r, part_c) {
+	if (!is.null(part_r) && !is.null(part_c)) {
+		structure(list(
+			ul = a[part_r$start, part_c$start, with = FALSE],
+			ll = a[part_r$end  , part_c$start, with = FALSE],
+			ur = a[part_r$start,   part_c$end, with = FALSE],
+			lr = a[part_r$end  ,   part_c$end, with = FALSE]),
+		omit = 'both')
+	} else if (!is.null(part_r)) {
+		structure(list(
+			upper = a[part_r$start, , with = FALSE],
+			lower = a[part_r$end,   , with = FALSE]),
+		omit = 'rows')
+	} else if (!is.null(part_c)) {
+		structure(list(
+			left  = a[, part_c$start,  with = FALSE],
+			right = a[, part_c$end,    with = FALSE]),
+		omit = 'cols')
+	} else {
+		structure(list(full = a), omit = 'none')
+	}
+}
+
+arr_partition <- function(a, rows, cols) {
+	stopifnot(rows >= 2L, cols >= 2L)
+	
+	# create sequences of indices to bisect rows and columns
+	part_r <- partition(nrow(a), rows)
+	part_c <- partition(ncol(a), cols)
+	
+	partition_from_parts(a, part_r, part_c)
 }
 
 # unpack tibble and coerce to data.frame
