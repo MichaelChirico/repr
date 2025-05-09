@@ -204,3 +204,25 @@ test_that('data.frame with list columns can be displayed', {
 		expect_identical(repr_html(data.table::as.data.table(df)), sub('data\\.frame','data.table',expected))
 	}
 })
+
+test_that('forced-narrow inputs work', {
+	withr::local_options(repr.matrix.max.rows = 2L, repr.matrix.max.cols = 2L)
+	df <- data.frame(a = 1:3, b = 4:6, c = 7:9)
+	expect_silent(repr_text(df))
+	expect_identical(
+		# Scrub non-ASCII characters to make the test platform-agnostic.
+		gsub("[^a-zA-Z0-9.&;<>= '\"/:\n\t]", "*", repr_html(df)),
+		"<table class=\"dataframe\">
+<caption>A data.frame: 3 * 3</caption>
+<thead>
+\t<tr><th scope=col>a</th><th scope=col>*</th><th scope=col>c</th></tr>
+\t<tr><th scope=col>&lt;int&gt;</th><th scope=col>*</th><th scope=col>&lt;int&gt;</th></tr>
+</thead>
+<tbody>
+\t<tr><td>1</td><td>*</td><td>7</td></tr>
+\t<tr><td>*</td><td>*</td><td>*</td></tr>
+\t<tr><td>3</td><td>*</td><td>9</td></tr>
+</tbody>
+</table>
+")
+})

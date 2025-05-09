@@ -43,8 +43,10 @@ arr_partition <- function(a, rows, cols) {
 	# assign a list of parts that can be coerced to strings
 	if (!is.null(part_r) && !is.null(part_c)) {
 		structure(list(
-			ul = a[part_r$start, part_c$start], ll = a[part_r$end, part_c$start],
-			ur = a[part_r$start, part_c$end  ], lr = a[part_r$end, part_c$end  ]),
+			ul = a[part_r$start, part_c$start, drop = FALSE],
+			ll = a[part_r$end  , part_c$start, drop = FALSE],
+			ur = a[part_r$start,   part_c$end, drop = FALSE],
+			lr = a[part_r$end  ,   part_c$end, drop = FALSE]),
 		omit = 'both')
 	} else if (!is.null(part_r)) {
 		structure(list(
