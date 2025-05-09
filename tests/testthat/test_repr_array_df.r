@@ -206,7 +206,7 @@ test_that('data.frame with list columns can be displayed', {
 })
 
 test_that('forced-narrow inputs work', {
-	withr::local_options(repr.matrix.max.rows = 2L, repr.matrix.max.cols = 2L)
+	withr::local_options(list(repr.matrix.max.rows = 2L, repr.matrix.max.cols = 2L))
 	df <- data.frame(a = 1:3, b = 4:6, c = 7:9)
 	expect_silent(repr_text(df))
 	expect_identical(
