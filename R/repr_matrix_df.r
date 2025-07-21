@@ -67,20 +67,20 @@ partition_from_parts.default <- function(a, part_r, part_c) {
 partition_from_parts.data.table <- function(a, part_r, part_c) {
 	if (!is.null(part_r) && !is.null(part_c)) {
 		structure(list(
-			ul = a[part_r$start, part_c$start, with = FALSE],
-			ll = a[part_r$end  , part_c$start, with = FALSE],
-			ur = a[part_r$start,   part_c$end, with = FALSE],
-			lr = a[part_r$end  ,   part_c$end, with = FALSE]),
+			ul = a[part_r$start, part_c$start, with = FALSE, drop = FALSE],
+			ll = a[part_r$end  , part_c$start, with = FALSE, drop = FALSE],
+			ur = a[part_r$start,   part_c$end, with = FALSE, drop = FALSE],
+			lr = a[part_r$end  ,   part_c$end, with = FALSE, drop = FALSE]),
 		omit = 'both')
 	} else if (!is.null(part_r)) {
 		structure(list(
-			upper = a[part_r$start, , with = FALSE],
-			lower = a[part_r$end,   , with = FALSE]),
+			upper = a[part_r$start, , with = FALSE, drop = FALSE],
+			lower = a[part_r$end,   , with = FALSE, drop = FALSE]),
 		omit = 'rows')
 	} else if (!is.null(part_c)) {
 		structure(list(
-			left  = a[, part_c$start,  with = FALSE],
-			right = a[, part_c$end,    with = FALSE]),
+			left  = a[, part_c$start,  with = FALSE, drop = FALSE],
+			right = a[, part_c$end,    with = FALSE, drop = FALSE]),
 		omit = 'cols')
 	} else {
 		structure(list(full = a), omit = 'none')
