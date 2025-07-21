@@ -235,3 +235,17 @@ test_that('data.table and data.frame elision is the same', {
 	expect_identical(repr_text(DF[1:10, ]), repr_text(data.table::as.data.table(DF[1:10, ])))
 	expect_identical(repr_text(DF[1:10, 1:10]), repr_text(data.table::as.data.table(DF[1:10, 1:10])))
 })
+
+test_that('data.table elision works in 1-column and 1-row edge cases', {
+	skip_if_not_installed('data.table')
+	withr::local_options(list(repr.matrix.max.rows = 2L, repr.matrix.max.cols = 2L))
+
+	DF <- data.frame(a = 1:3)
+	expect_identical(repr_text(DF), repr_text(data.table::as.data.table(DF)))
+
+	DF <- data.frame(a = 1L, b = 2L, c = 3L)
+	expect_identical(repr_text(DF), repr_text(data.table::as.data.table(DF)))
+
+	DF <- data.frame(a = 1:3, b = 4:6, c = 7:9)
+	expect_identical(repr_text(DF), repr_text(data.table::as.data.table(DF)))
+})
