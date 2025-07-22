@@ -120,6 +120,7 @@ arr_part_unpack_tbl <- function(tbl) {
 }
 
 arr_parts_format <- function(parts) structure(lapply(parts, arr_part_format), omit = attr(parts, 'omit'))
+#' @importFrom utils capture.output str
 arr_part_format <- function(part) {
 	if (inherits(part, 'tbl')) {
 		part <- arr_part_unpack_tbl(part)
