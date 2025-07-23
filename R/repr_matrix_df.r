@@ -89,7 +89,7 @@ partition_from_parts.data.table <- function(a, part_r, part_c) {
 
 arr_partition <- function(a, rows, cols) {
 	stopifnot(rows >= 2L, cols >= 2L)
-	
+
 	# create sequences of indices to bisect rows and columns
 	part_r <- partition(nrow(a), rows)
 	part_c <- partition(ncol(a), cols)
