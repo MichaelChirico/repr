@@ -256,11 +256,13 @@ test_that("partially-empty matrices requiring elision can be displayed", {
     repr.matrix.max.cols = 8L
   ))
   m <- matrix(nrow = 0L, ncol = 10L)
+  # all on one line
   expect_no_warning(expect_no_match(repr(m), "\n", fixed = TRUE))
-  expect_no_warning(repr(t(m)))
+  # always [n,] with nothing after it
+  expect_no_warning(expect_no_match(repr(t(m)), "\\][^\n]"))
 
   colnames(m) <- sprintf("A%02d", 1:10)
   # gap from A04 to A07 with \cdots, then only A0n, no newline
-  expect_no_warning(expect_match(repr(m), "A04[^A]*A07[A0-9 ]*$"))
-  expect_no_warning(expect_match(repr(t(m)), "A04[^A]*A07"))
+  expect_no_warning(expect_no_match(expect_match(repr(m), "A04[^A]*A07"), "\n", fixed = TRUE))
+  expect_no_warning(expect_no_match(expect_match(repr(t(m)), "A04[^A]*A07"), "A0[1-9][^\n]"))
 })
