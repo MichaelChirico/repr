@@ -256,7 +256,7 @@ test_that("partially-empty matrices requiring elision can be displayed", {
     repr.matrix.max.cols = 8L
   ))
   m <- matrix(nrow = 0L, ncol = 10L)
-  expect_silent(repr(m))
+  expect_silent(expect_match(repr(m), "^[^\n]*$"))
   expect_silent(repr(t(m)))
 
   colnames(m) <- sprintf("A%02d", 1:10)
